@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--  导入其他配置文件，作为预设  -->
+    <property name="PATH" value="./log/gateway"></property>
+    <!--  Appender作为日志打印器配置，这里命名随意  -->
+    <!--  ch.qos.logback.core.ConsoleAppender是专用于控制台的Appender  -->
+    <property name="CHARSET" value="UTF-8"></property>
+    <property name="LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%highlight(%-5level)] %logger{5} %thread %green(%-18X{LOG_ID}) - %msg%n"></property>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <!--  指定日志输出级别，以及启用的Appender，这里就使用了我们上面的ConsoleAppender  -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!--  ch.qos.logback.core.rolling.RollingFileAppender用于文件日志记录，它支持滚动  -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>${LOG_PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+        <!--  自定义滚动策略，防止日志文件无限变大，也就是日志文件写到什么时候为止，重新创建一个新的日志文件开始写  -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--  文件保存位置以及文件命名规则，这里用到了%d{yyyy-MM-dd}表示当前日期，%i表示这一天的第N个日志  -->
+            <FileNamePattern>${PATH}/%d{yyyy-MM-dd}-spring-%i.log</FileNamePattern>
+            <!--  到期自动清理日志文件  -->
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+            <!--  最大日志保留时间  -->
+            <maxHistory>7</maxHistory>
+            <!--  最大单个日志文件大小  -->
+            <maxFileSize>10MB</maxFileSize>
+        </rollingPolicy>
+    </appender>
+
+    <!--  指定日志输出级别，以及启用的Appender，这里就使用了我们上面的ConsoleAppender  -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</configuration>

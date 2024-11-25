@@ -1,0 +1,19 @@
+server:
+  port: 8000
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: member
+          uri: http://localhost:8001/member
+          predicates:
+            - name: Path
+              args:
+                pattern: /member/**
+        - id: business
+          uri: http://localhost:8002/business
+          predicates:
+            - name: Path
+              args:
+                pattern: /business/**
+
